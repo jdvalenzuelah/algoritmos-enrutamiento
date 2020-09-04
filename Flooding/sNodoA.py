@@ -15,26 +15,17 @@ def connect(sid, nodo):
 
 @sio.event
 def my_message(sid,data):
-    print('nodoFuente ', data["nodoFuente"])
-    print ("nodoDestino", data["nodoDestino"])
-    print ("saltos", data["saltos"])
-    print ("distancia", data["distancia"])
-    print ("nodosUsados", data["nodosUsados"])
-    print ("mensaje", data["mensaje"])
-
     for i in range(len(datanodos)):
-        if data["nodoDestino"]== datanodos[i]:
+        if data["connect"]== datanodos[i]:
             destino = idnodos[i]
-
-
-    sio.emit('datos', {
-        "nodoFuente": data["nodoFuente"],
-        'nodoDestino': data["nodoDestino"],
-        "saltos": data["saltos"],
-        "distancia": data["distancia"],
-        "nodosUsados":data["nodosUsados"],
-        "mensaje": data["mensaje"]
-        },room=destino)
+            sio.emit('datos', {
+                "nodoFuente": data["nodoFuente"],
+                'nodoDestino': data["nodoDestino"],
+                "saltos": data["saltos"],
+                "distancia": data["distancia"],
+                "nodosUsados":data["nodosUsados"],
+                "mensaje": data["mensaje"]
+                },room=destino)
 
 @sio.event
 def infonodo(sid,data):

@@ -30,7 +30,6 @@ def datos(data):
     nodosUsados.append(nodo)
 
 
-
     #print (nodosUsados)
     if (data["nodoDestino"] == nodo):
         print("------------------info----------------")
@@ -41,7 +40,8 @@ def datos(data):
         print("----------------mensaje---------------")
         print ("mensaje", data["mensaje"])
         print("--------------------------------------")
-        print ("\n")
+    
+    menu()
     
 
     if (data["nodoDestino"] != nodo and hopCount >= data["saltos"]+1):
@@ -55,8 +55,8 @@ def datos(data):
                 "nodosUsados": data["nodosUsados"],
                 "mensaje": data["mensaje"]
                 })
-    
-    menu()
+        menu()
+
 
 @sio.event
 def sendinfo():
@@ -90,22 +90,17 @@ def menu():
 
 
 
-    
-
-
 #sio.wait()
 if __name__ == "__main__":
-    nodo = "b"
-    connect = ["f","a"]
-    distanciaNodos= [2,7]
+
+    nodo = "f"
+    connect = ["b","h","g","d"]
+    distanciaNodos= [2,4,3,3]
+
     hopCount=9
     sendinfo()
-
+    
     menu()
-
-
-    #ñalkhsdfñalkshdfñlakjsdfñlajsdkf
-
 
 
 

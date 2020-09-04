@@ -9,24 +9,54 @@ def connect():
 
 @sio.event
 def my_message(data):
-    sio.emit('my_message', {
-        "nodoFuente": nodo,
-        'nodoDestino': nodoDestino,
-        "saltos": saltos,
-        "distancia": distancia,
-        "nodosUsados":nodosUsados.append(nodo),
-        "mensaje": mensaje
-        })
+    for i in range(len(connect)):
+        sio.emit('my_message', {
+            "connect": connect[i],
+            "nodoFuente": nodo,
+            'nodoDestino': nodoDestino,
+            "saltos": saltos+1,
+            "distancia": distancia,
+            "nodosUsados":nodosUsados,
+            "mensaje": mensaje
+            })
 
+    menu()
 
+    
+    
 @sio.event
 def datos(data):
-    print('nodoFuente ', data["nodoFuente"])
-    print ("nodoDestino", data["nodoDestino"])
-    print ("saltos", data["saltos"])
-    print ("distancia", data["distancia"])
-    print ("nodosUsados", data["nodosUsados"])
-    print ("mensaje", data["mensaje"])
+    
+    nodosUsados=data["nodosUsados"]
+    nodosUsados.append(nodo)
+
+
+    #print (nodosUsados)
+    if (data["nodoDestino"] == nodo):
+        print("------------------info----------------")
+        print('nodoFuente ', data["nodoFuente"])
+        print ("nodoDestino", data["nodoDestino"])
+        print ("saltos", data["saltos"])
+        print ("nodosUsados", data["nodosUsados"])
+        print("----------------mensaje---------------")
+        print ("mensaje", data["mensaje"])
+        print("--------------------------------------")
+        print ("\n")
+    
+
+    if (data["nodoDestino"] != nodo and hopCount >= data["saltos"]+1):
+        for i in range(len(connect)):
+            sio.emit('my_message', {
+                "connect": connect[i],
+                "nodoFuente": data["nodoFuente"],
+                'nodoDestino': data["nodoDestino"],
+                "saltos": data["saltos"]+1,
+                "distancia": data["distancia"],
+                "nodosUsados": data["nodosUsados"],
+                "mensaje": data["mensaje"]
+                })
+    
+    menu()
 
 
 @sio.event
@@ -44,17 +74,30 @@ def disconnect():
 sio.connect('http://localhost:5000')
 
 
+def menu():
+    global nodoDestino
+    global saltos
+    global distancia
+    global mensaje
+    global nodosUsados
+    nodoDestino = input ("Ingrese el Nodo de Destino\n")
+    saltos=0
+    distancia=0
+
+    mensaje = input ("ingrese el mensaje\n")
+    nodosUsados=[nodo]
+    my_message("funcion")
+
+
 #sio.wait()
 if __name__ == "__main__":
 
     nodo = "a"
+    connect = ["b","i","c"]
+    distanciaNodos= [7,2,7] 
+    hopCount=9
     sendinfo()
-    
-    nodoDestino = input ("Ingrese el Nodo de Destino\n")
-    saltos=0
-    distancia=0
-    mensaje = input ("ingrese el mensaje\n")
-    nodosUsados=[]
-    
-    my_message("funcion")
+
+    menu()
+
 

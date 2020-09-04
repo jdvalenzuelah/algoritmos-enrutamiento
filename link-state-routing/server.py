@@ -19,7 +19,6 @@ def new_node(sid, data):
 @server.event
 def connect_to(sid, data):
     global nodes
-    print(f'------- {nodes} --------')
     for id in nodes.keys():
         if id == data['to']:
             server.emit('new_graph_connection', data, room=nodes[id])
@@ -30,6 +29,13 @@ def send_to(sid, data):
     for id in nodes.keys():
         if id == data['to']:
             server.emit(data['event'], data['data'], room=nodes[id])
+
+@server.event
+def send_msg(sid, data):
+    global nodes
+    for id in nodes.keys():
+        if id == data['next']:
+            server.emit('msg', data, room=nodes[id])
 
 if __name__ == "__main__":
     eventlet.wsgi.server(eventlet.listen(('', 500)), app)
